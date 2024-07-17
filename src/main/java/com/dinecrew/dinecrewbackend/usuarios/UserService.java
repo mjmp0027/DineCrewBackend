@@ -70,7 +70,7 @@ public class UserService {
     public void resetPassword(String token, String newPassword) {
         Optional<User> userOpt = repository.findByResetPasswordToken(token);
         if (userOpt.isEmpty()) {
-            throw new RuntimeException("Token no válido");
+            throw new RuntimeException("Ya ha pasado una hora desde que se solicitó el cambio de contraseña, por favor solicita un nuevo enlace para restablecer tu contraseña\n(vuelva a pulsar he olvidado mi contraseña)");
         }
 
         User user = userOpt.get();
