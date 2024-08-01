@@ -1,10 +1,11 @@
 package com.dinecrew.dinecrewbackend.usuarios;
 
+import com.dinecrew.dinecrewbackend.enums.Role;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.util.List;
 
 @Document(collection = "users")
 @Getter
@@ -20,5 +21,6 @@ public class User {
     private String email;
     private String password;
     private String resetPasswordToken;
-    private Date resetPasswordExpires;
+    private List<String> mesasAsignadas; // Almacena los IDs de las mesas asignadas
+    private Role role;
 }
