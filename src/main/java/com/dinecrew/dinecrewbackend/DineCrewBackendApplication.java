@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = {"com.dinecrew.dinecrewbackend.pedidos", "com.dinecrew.dinecrewbackend.usuarios"})
+@EnableMongoRepositories(basePackages = {"com.dinecrew.dinecrewbackend.pedidos", "com.dinecrew.dinecrewbackend.usuarios", "com.dinecrew.dinecrewbackend.mesas", "com.dinecrew.dinecrewbackend.cuentas"})
 public class DineCrewBackendApplication {
 
 	public static void main(String[] args) {
