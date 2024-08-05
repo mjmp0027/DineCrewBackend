@@ -61,7 +61,7 @@ public class UserService {
 
         repository.save(user);
 
-        String resetUrl = "http://192.168.1.182:3000/reset-password/" + token;
+        String resetUrl = "http://192.168.0.65:3000/reset-password/" + token;
         String emailContent = "Para restablecer tu contraseña, haz clic en el siguiente enlace:\n" + resetUrl;
 
         try {

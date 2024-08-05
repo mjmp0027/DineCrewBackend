@@ -178,8 +178,8 @@ public class AuthController {
             response.put("message", e.getMessage());
             return ResponseEntity.status(400).body(response);
         }
-
-        return ResponseEntity.ok(new Response("Contraseña restablecida correctamente"));
+        response.put("message", "Contraseña restablecida correctamente, ya puede cerrar esta ventana");
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/validate-token")
