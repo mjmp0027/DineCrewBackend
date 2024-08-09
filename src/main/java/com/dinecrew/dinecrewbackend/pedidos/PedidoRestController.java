@@ -1,11 +1,18 @@
 package com.dinecrew.dinecrewbackend.pedidos;
 
+import com.dinecrew.dinecrewbackend.enums.Estado;
 import com.dinecrew.dinecrewbackend.enums.State;
+import com.dinecrew.dinecrewbackend.mesas.Mesa;
+import com.dinecrew.dinecrewbackend.mesas.MesaService;
+import com.dinecrew.dinecrewbackend.notificaciones.Notificacion;
+import com.dinecrew.dinecrewbackend.notificaciones.NotificationService;
+import com.dinecrew.dinecrewbackend.usuarios.User;
+import com.dinecrew.dinecrewbackend.usuarios.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +22,15 @@ public class PedidoRestController {
 
     @Autowired
     private PedidoService pedidoService;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private MesaService mesaService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerPedido(
@@ -65,7 +81,7 @@ public class PedidoRestController {
                 .estado(State.PENDIENTE)
                 .items(dto.getItems())
                 .mesa(dto.getMesa())
-                .timestamp(Instant.now())
+                .timestamp(LocalDateTime.now())
                 .build();
 
         pedido = pedidoService.crearPedido(pedido);
@@ -116,6 +132,22 @@ public class PedidoRestController {
         pedido.setEstado(estado);
 
         pedido = pedidoService.crearPedido(pedido);
+
+        if (estado.equals(State.LISTO)) {
+            Mesa mesa = mesaService.findByNumero(pedido.getMesa());
+            if (mesa.getUserId() == null) {
+                return ResponseEntity.status(400).body("La mesa no tiene camarero asignado");
+            }
+            notificationService.save(Notificacion.builder()
+                    .mensaje("Pedido listo para la mesa " + pedido.getMesa())
+                    .titulo("Pedido Listo")
+                    .userId(mesa.getUserId())
+                    .timestamp(LocalDateTime.now())
+                    .leida(Estado.NOLEIDA)
+                    .build());
+            User user = userService.findById(mesa.getUserId());
+            notificationService.sendOrderReadyNotification(pedido.getMesa(), user.getUsername());
+        }
         return ResponseEntity.status(200).body(PedidoDtoOut.fromDocument(pedido));
     }
 
