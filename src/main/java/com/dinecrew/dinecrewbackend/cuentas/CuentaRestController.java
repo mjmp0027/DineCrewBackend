@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/cuentas")
@@ -28,7 +28,7 @@ public class CuentaRestController {
         Cuenta cuenta = Cuenta.builder()
                 .total(dto.getTotal())
                 .items(dto.getItems())
-                .timestamp(Instant.now())
+                .timestamp(LocalDateTime.now())
                 .build();
 
         cuentaService.crearCuenta(cuenta);
