@@ -34,6 +34,10 @@ public class UserService {
         return repository.findByUsername(username).orElse(null);
     }
 
+    public User findById(String userId) {
+        return repository.findById(userId).orElse(null);
+    }
+
     // Get all users
     public List<User> findAll() {
         return repository.findAll();

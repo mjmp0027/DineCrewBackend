@@ -59,12 +59,12 @@ public class AuthController {
         //Si el usuario tiene el rol cocinero no se le asignan mesas
         User user = userService.findByUsername(userDetails.getUsername());
         if (user.getRole() == Role.COCINERO) {
-            return ResponseEntity.ok(new JwtResponse(jwt));
+            return ResponseEntity.ok(new JwtResponse(jwt, user.getId()));
         }
 
         userService.asignarMesas(userDetails.getUsername());
 
-        return ResponseEntity.ok(new JwtResponse(jwt));
+        return ResponseEntity.ok(new JwtResponse(jwt, user.getId()));
     }
 
     @PostMapping("/logout/{username}")
