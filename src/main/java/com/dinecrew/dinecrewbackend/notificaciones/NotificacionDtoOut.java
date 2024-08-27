@@ -20,6 +20,7 @@ public class NotificacionDtoOut {
     private LocalDateTime timestamp;
     private String userId;
     private Estado leida;
+    private List<String> items;
 
     public static NotificacionDtoOut fromDocument(Notificacion notificacion) {
         return NotificacionDtoOut.builder()
@@ -29,6 +30,7 @@ public class NotificacionDtoOut {
                 .timestamp(notificacion.getTimestamp())
                 .userId(notificacion.getUserId())
                 .leida(notificacion.getLeida())
+                .items(notificacion.getItems())
                 .build();
     }
 

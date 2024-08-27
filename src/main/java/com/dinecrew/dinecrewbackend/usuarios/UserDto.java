@@ -11,6 +11,7 @@ public class UserDto {
     private String username;
     private String email;
     private String password;
+    private String confirmPassword;
     private Role role;
 
     public static UserDto fromDocument(User user) {

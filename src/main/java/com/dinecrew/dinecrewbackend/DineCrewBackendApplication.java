@@ -12,7 +12,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = {"com.dinecrew.dinecrewbackend.pedidos", "com.dinecrew.dinecrewbackend.usuarios", "com.dinecrew.dinecrewbackend.mesas", "com.dinecrew.dinecrewbackend.cuentas", "com.dinecrew.dinecrewbackend.notificaciones"})
+@EnableMongoRepositories(basePackages = {"com.dinecrew.dinecrewbackend.pedidos",
+		"com.dinecrew.dinecrewbackend.usuarios",
+		"com.dinecrew.dinecrewbackend.mesas",
+		"com.dinecrew.dinecrewbackend.cuentas",
+		"com.dinecrew.dinecrewbackend.notificaciones"})
 public class DineCrewBackendApplication {
 
 	public static void main(String[] args) {

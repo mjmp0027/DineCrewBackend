@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/logout/**").authenticated()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/auth/validate-token").permitAll()
+                        .requestMatchers("/api/pedidos/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -11,4 +11,6 @@ public interface PedidoRepository extends MongoRepository<Pedido, String> {
     List<Pedido> findAllByOrderByTimestampDesc();
 
     void deleteAllByMesa(String mesa);
+
+    List<Pedido> findByMesaIn(List<String> mesaIds);
 }

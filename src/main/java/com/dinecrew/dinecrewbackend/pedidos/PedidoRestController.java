@@ -32,6 +32,7 @@ public class PedidoRestController {
     @Autowired
     private MesaService mesaService;
 
+    // Endpoint que obtiene un pedido para poder modificarlo
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerPedido(
             @PathVariable String id
@@ -47,12 +48,24 @@ public class PedidoRestController {
         return ResponseEntity.status(200).body(PedidoDtoOut.fromDocument(pedido));
     }
 
+
+    // Endpoint para obtener los pedidos por usuario y role
     @GetMapping
-    public ResponseEntity<?> obtenerPedidos() {
-        List<Pedido> pedidos = pedidoService.obtenerPedidos();
+    public ResponseEntity<?> obtenerPedidos(
+            @RequestParam(required = false) String userId,
+            @RequestParam String role
+    ) {
+        List<Pedido> pedidos;
+        if ("CAMARERO".equals(role) && userId != null) {
+            pedidos = pedidoService.obtenerPedidosPorUsuario(userId);
+        } else {
+            pedidos = pedidoService.obtenerPedidos();
+        }
         return ResponseEntity.ok(PedidoDtoOut.fromDocuments(pedidos));
     }
 
+
+    // Endpoint para obtener los pedidos por mesa y estado usando para calcular la cuenta
     @GetMapping("/{mesa}/{estado}")
     public ResponseEntity<?> obtenerPedidos(
             @PathVariable String mesa,
@@ -133,6 +146,7 @@ public class PedidoRestController {
 
         pedido = pedidoService.crearPedido(pedido);
 
+        // Si un pedido pasa a LISTO se enviará una notificación al usuario
         if (estado.equals(State.LISTO)) {
             Mesa mesa = mesaService.findByNumero(pedido.getMesa());
             if (mesa.getUserId() == null) {
@@ -144,13 +158,15 @@ public class PedidoRestController {
                     .userId(mesa.getUserId())
                     .timestamp(LocalDateTime.now())
                     .leida(Estado.NOLEIDA)
+                    .items(pedido.getItems())
                     .build());
             User user = userService.findById(mesa.getUserId());
-            notificationService.sendOrderReadyNotification(pedido.getMesa(), user.getUsername());
+            notificationService.sendOrderReadyNotification(pedido.getMesa(), user.getUsername(), pedido.getItems());
         }
         return ResponseEntity.status(200).body(PedidoDtoOut.fromDocument(pedido));
     }
 
+    // Endpoint para terminar el servicio
     @DeleteMapping("/delete/{mesa}")
     public ResponseEntity<?> borrarPedidos(
             @PathVariable String mesa

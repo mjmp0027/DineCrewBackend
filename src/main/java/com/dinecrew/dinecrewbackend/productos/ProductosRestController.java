@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/productos")
 public class ProductosRestController {
 
+
+    // Endpoint para la obtención del csv con los productos
     @GetMapping
     public ResponseEntity<Resource> getProductosCsv() {
         try {

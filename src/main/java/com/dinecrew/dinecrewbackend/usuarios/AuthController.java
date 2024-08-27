@@ -72,7 +72,6 @@ public class AuthController {
             @PathVariable String username
     ) {
         Map<String, String> response = new HashMap<>();
-        System.out.println("Logging out: " + username);
         userService.liberarMesas(username);
         response.put("message", "Sesión cerrada y mesas liberadas");
         return ResponseEntity.ok(response);
@@ -86,6 +85,7 @@ public class AuthController {
         String username = dto.getUsername();
         String email = dto.getEmail();
         String password = dto.getPassword();
+        String confirmPassword = dto.getConfirmPassword();
         Role role = dto.getRole();
 
         if (username == null || username.isEmpty()) {
@@ -125,6 +125,21 @@ public class AuthController {
             return ResponseEntity.status(400).body(response);
         }
 
+        if (confirmPassword == null || confirmPassword.isEmpty()) {
+            response.put("message", "La contraseña no puede estar vacía");
+            return ResponseEntity.status(400).body(response);
+        }
+
+        if (confirmPassword.length() < 8) {
+            response.put("message", "La contraseña debe tener al menos 8 caracteres");
+            return ResponseEntity.status(400).body(response);
+        }
+
+        if (!password.equals(confirmPassword)) {
+            response.put("message", "Las contraseñas no coinciden");
+            return ResponseEntity.status(400).body(response);
+        }
+
         User user = User.builder()
                 .username(username)
                 .email(email)
@@ -149,6 +164,11 @@ public class AuthController {
             @RequestBody Map<String, String> request
             )
     {
+        if (userService.findByUsername(request.get("username")) == null) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "No existe el usuario");
+            return ResponseEntity.status(400).body(response);
+        }
         String username = request.get("username");
         userService.sendPasswordResetToken(username);
         return ResponseEntity.ok(new Response("Email enviado"));

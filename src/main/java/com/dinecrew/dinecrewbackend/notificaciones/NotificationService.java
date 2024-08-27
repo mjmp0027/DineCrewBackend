@@ -28,8 +28,6 @@ public class NotificationService {
 
     public void marcarComoLeidas(String userId) {
         LocalDateTime threeHoursAgo = LocalDateTime.now().minusHours(3);
-        System.out.println(threeHoursAgo);
-        System.out.println(userId);
         List<Notificacion> notificaciones = repository.findRecentNotificationsNoReads(userId, threeHoursAgo, Estado.NOLEIDA);
         notificaciones.forEach(notificacion -> {
             notificacion.setLeida(Estado.LEIDA);
@@ -37,10 +35,12 @@ public class NotificationService {
         });
     }
 
-    public void sendOrderReadyNotification(String tableName, String username) {
+    public void sendOrderReadyNotification(String tableName, String username, List<String> items) {
+
+        String itemsString = String.join(", ", items);
         Notification notification = Notification.builder()
                 .setTitle("Pedido Listo")
-                .setBody("El pedido de la mesa " + tableName + " está listo.")
+                .setBody("El pedido de la mesa " + tableName + " está listo. Productos: " + itemsString)
                 .build();
 
         Message message = Message.builder()
